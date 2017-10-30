@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<title>焦点图2</title> 
+<script type="text/javascript" src="js/jquery-1.8.0.min.js"></script> 
+<style type="text/css">
+{margin:0; padding:0; list-style:none;} 
+.clear-fix{zoom:1;} 
+.clear-fix:after{ content:"\0020"; clear:both; height:0; display:block;} 
+h1{ text-align:center;} 
+.top{ width:980px; margin:0 auto; position:relative;} 
+.top input{ width:100px; position:absolute; top:10px;} 
+.top .prev{ left:0;} 
+.top .next{ position:absolute; right:0;} 
+.slider{width:980px; height:365px; margin:0 auto; position:relative;} 
+.slider .img_box{width:980px; height:365px; overflow:hidden;} 
+.slider ul{width:100000px;} 
+.slider li{ width:980px; height:365px; float:left; background:#ccc; text-align:center; font-size:larger; line-height:365px;} 
+.slider .num_box{ position:absolute; bottom:10px; right:10px;} 
+.slider .num_box a{ width:10px; height:10px; background:#fff; border-radius:5px; display:inline-block;} 
+.slider .num_box a.c{ background:#C00;}
+</style> 
+</head> 
+<body> 
+<div class="top"> 
+	<input type="button" value="上一张" class="prev" /> 
+	<h1>鼠标点击按钮切换</h1> 
+	<input type="button" value="下一张" class="next" /> 
+</div> 
+<div class="slider"> 
+	<div class="img_box"> 
+		<ul class="clear-fix"> 
+			<li>1</li> 
+			<li>2</li> 
+			<li>3</li> 
+			<li>4</li> 
+			<li>5</li> 
+		</ul>
+	</div> 
+	<div class="num_box"> 
+		<a href="javascript:void(0)" class="c"></a> 
+		<a href="javascript:void(0)"></a> 
+		<a href="javascript:void(0)"></a> 
+		<a href="javascript:void(0)"></a> 
+		<a href="javascript:void(0)"></a> 
+	</div> 
+</div> 
+<script type="text/javascript">
+var n=0; 
+function slider(index){ 
+	$("ul").stop().animate({
+		marginLeft:-index*980
+	},1000); 
+	$(".num_box a")removeClass("c").eq(index).addClass("c"); 
+} //自动播放： 
+t=setInterval(function(){ 
+	n++; 
+	n = n >= $(".num_box a").length ? 0 : n; 
+	slider(n); 
+},3000); 
+//上一张：
+ $(".prev").click(function(){ 
+ 	clearInterval(t); 
+ 	var index=$(".num_box a.c").index()-1; 
+ 	index = index < 0 ? $(".num_box a").length-1 : index; 
+ 	slider(index); })
+  //下一张：
+ $(".next").click(function(){ 
+	 clearInterval(t); 
+	 var index = $(".num_box a.c").index()+1; 
+	 index = index >= $(".num_box a").length ? 0 : index; 
+	 slider(index); }) 
+
+
+ //点击圆点向右滚动： 
+ $(".num_box a").click(function(){ 
+	 clearInterval(t); 
+	 var index=$(this).index(); 
+	 slider(index); }) 
+ 
+
+  //鼠标移出按钮和圆点： 
+ $(".num_box a,.next,.prev").mouseout(function(){ 
+ 	clearInterval(t); 
+ 	t=setInterval(function(){ 
+ 		m = $(".num_box a.c").index()+1; 
+ 		m = m >= $(".num_box a").length ? 0 : m; 
+ 		slider(m);
+ 	},3000); })
+ </script> 
+ </body> 
+ </html>

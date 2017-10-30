@@ -1,0 +1,150 @@
+@charset "utf-8";
+html,body{
+	-webkit-user-select: none;
+}
+html,body,div,img{
+	margin: 0;padding: 0;
+}
+
+.container{
+	display: none;
+}
+.pervShow{
+	display: none;
+}
+.container > div{
+	height: 100%;
+	width: 100%;position: relative;
+}
+.container .page_1{
+	background: url(../img/bg1.jpg) no-repeat;
+	background-size: 100% 100%;
+
+}
+.container .page_2{
+	background: url(../img/bg2.jpg) no-repeat;background-size: 100% 100%;
+}
+.container .page_3{
+	background: url(../img/bg3.jpg) no-repeat;background-size: 100% 100%;
+}
+.container .page_4{
+	background: url(../img/bg4_b.png) no-repeat;
+	background-position: bottom;
+	background-size: 100%;
+}
+.container .page_5{
+	background: url(../img/bg5.jpg) no-repeat;background-size: 100% 100%;
+}
+/*LOGO*/
+.logo{
+	text-align: center;
+	position: fixed;
+	display: block;
+	width: 33px;
+	height: 20px;
+	bottom: 35px;
+	left: 0;right: 0;
+	margin: auto;
+	z-index: 999;
+	font-size: 30px;
+}
+.logo .l{
+	position: absolute;
+	right: 0;bottom:8px;
+	display: block;
+	height: 0px;
+	border-bottom:4px solid #B6B1AE;
+	width: 20px;
+	transform: rotate(45deg);
+}
+.logo .r{
+	left: 0;bottom: 8px;
+	position: absolute;
+	display: block;
+	height: 0px;width: 20px;
+	border-bottom: 4px solid #B6B1AE;
+	transform: rotate(-45deg);
+}
+.top-l,.top-r{
+	position: fixed;
+	z-index: 999;
+}
+.top-l img,.top-r img{
+	width: 100%;
+}
+.top-l{
+	left: 10px;top: 20px;
+}
+.top-r{
+	right: 5px;top: 10px;
+}
+
+/*page1页面效果*/
+.swiper-slide > img{
+	display: block;
+	width: 80%;
+	
+	position: absolute;
+}
+.page_1 img.title1{
+	top: 100px;left: 10px;
+}
+.page_1 img.title1_b{
+	top: 210px;left: 10px;
+}
+.page_1 img.car{
+	bottom: 0;
+	width: 100%;
+	left: 0;
+}
+/*page1页面效果END*/
+/*page2页面效果*/
+.page_2 img.title2{
+	top: 14%;left: 10px;
+}
+.page_2 img.car1{
+	right: 0;
+	bottom: 0;
+	width: 100%;
+}
+/*page2页面效果end*/
+/*page3页面效果*/
+.page_3 img.title3{
+	top: 16%;right: 10px;
+}
+.page_3 img.fa{
+	left: 10px;
+	bottom: 0;
+	width: 55%;
+}
+/*page3页面效果end*/
+/*page4页面效果*/
+.page_4 img.title4{
+	top: 14%;
+	left: 10px;
+}
+.page_4 img.title4_b{
+	top: 35%;
+	left: 10px;
+	width: 95%;
+}
+/*page4页面效果end*/
+/*page5页面效果*/
+.page_5 img.title5{
+	top: 11%;
+	left: 10px;
+}
+.page_5 .button{
+	position: absolute;
+	width: 55%;
+	top: 26.5%;
+	right: 0;
+}
+.page_5 .button img{
+	width: 100%;
+}
+.page_5 img.car2{
+	width: 100%;
+	bottom: 19%;
+}
+/*page5页面效果end*/

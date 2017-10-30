@@ -1,0 +1,23 @@
+body,h1,ul,p,h2,h3,figure,ol{margin: 0;padding: 0;}
+ul,ol                       {list-style: outside none none;}
+a                           {text-decoration: none;}
+body                        {background-color: #fff;font-family: "Helvetica Neue",Helvetica,Arial,"Microsoft Yahei UI","Microsoft YaHei",SimHei,"宋体",simsun,sans-serif;}
+.none{display: none;}
+#header{width: 100%;height: 70px;background-color: #333;box-shadow: 0 1px 10px rgba(0,0,0,0.3);position: relative;z-index: 99999;}
+#header .center{width:1263px;height: 70px;margin: 0 auto;}
+#header  .logo{width: 240px;height: 70px;background-image:  url(../img/logo.png);float: left;text-indent: -9999px;}
+#header  .link{width: 650px;height: : 70px;line-height: 70px;color: #eee;float: right;}
+#header .link li{width: 120px;float: left;text-align: center;}
+#header .link a {color: #eee; display: block;}
+#header .link a:hover,#header .active a {background-color: #000;}
+
+
+
+
+#footer{clear: both;height: 360px;background-color: #222;position: relative;top: 20px;}
+#footer .top{width: 1263px;height: 281px;margin: 0 auto;text-align: center}
+#footer .block{width: 410px;height: 280px;display: inline-block;text-align: left;color: #ccc;vertical-align: top}
+#footer .block h2{font-size: 24px;padding: 20px 0 0 20px;font-weight: normal;}
+#footer .block hr{width: 90%;border: 1px dashed #333;}
+#footer .block ul{font-size: 18px;color: #777;text-indent: 20px;line-height: 2;}
+#footer .buttom{height: 80px;line-height: 80px;color: #777;background-color: #000;border-top: 1px solid #444;text-align: center;}

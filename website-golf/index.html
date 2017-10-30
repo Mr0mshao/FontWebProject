@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" type="text/css" href="css/index.css"/>
+	<link rel="stylesheet" type="text/css" href="css/swiper.min.css"/>
+	<link rel="stylesheet" href="css/animate.min.css" />
+	<title>大众高尔夫-Golf</title>
+</head>
+<body>
+		<img src="img/loading.gif" style="width: 100%;height: 100%;" id="loadImg"/>
+	<div class="swiper-container container" id="container">
+		<div class="swiper-wrapper">
+			<div class="swiper-slide page_1">
+				<img src="img/title1.png"  class="ani title1" swiper-animate-effect="fadeInLeft" swiper-animate-duration="0.5s" swiper-animate-delay="0.3s"/>
+				<img src="img/title1_b.png" class="ani title1_b" swiper-animate-effect="bounceInLeft" swiper-animate-duration="0.5s" swiper-animate-delay="0.3s"/>
+				<img src="img/car.png" class="ani car" swiper-animate-effect="bounceInLeft" swiper-animate-duration="0.5s" swiper-animate-delay="0.3s"/>
+			</div>
+			<div class="swiper-slide page_2">
+				<img src="img/title2.png" class="ani title2" swiper-animate-effect="fadeInLeft" swiper-animate-duration="0.5s" swiper-animate-delay="0.3s" />
+				<img src="img/car1.png" class="ani car1" swiper-animate-effect="bounceInRight" swiper-animate-duration="0.5s" swiper-animate-delay="0.3s" />
+			</div>
+			<div class="swiper-slide page_3">
+				<img src="img/title3.png" class="ani title3" swiper-animate-effect="fadeInRight" swiper-animate-duration="0.5s" swiper-animate-delay="0.3s"/>
+				<img src="img/fa.png" class="ani fa" swiper-animate-effect="bounceInLeft" swiper-animate-duration="0.5s" swiper-animate-delay="0.3s"/>
+			</div>
+			<div class="swiper-slide page_4">
+				<img src="img/title4.png" class="ani title4" swiper-animate-effect="fadeInLeft" swiper-animate-duration="0.5s" swiper-animate-delay="0.3s"/>
+				<img src="img/title4_b.png" class="title4_b"/>
+			</div>
+			<div class="swiper-slide page_5">
+				<img src="img/title5.png" class="ani title5" swiper-animate-effect="fadeInLeft" swiper-animate-duration="0.5s" swiper-animate-delay="0.3s"/>
+				<a href="javascript:void(0);" class="ani button" swiper-animate-effect="fadeInRight" swiper-animate-duration="0.5s" swiper-animate-delay="0.8s"><img src="img/button.png" /></a>
+				<img src="img/car2.png" class="ani car2" swiper-animate-effect="slideInLeft" swiper-animate-duration="0.5s" swiper-animate-delay="0.3s"/>
+			</div>
+		</div>
+	</div>
+	<div class="top-l pervShow"><img src="img/logo_l.png"/></div>
+	<div class="top-r pervShow"><img src="img/logo_r.png"/></div>
+	<span class="logo pervShow"><i class="l"></i><i class="r"></i></span>
+<script src="js/swiper.animate.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+window.onload = function(){
+	var pervShow = document.getElementsByClassName("pervShow");
+	var winW = document.documentElement.clientWidth || document.body.clientWidth || window.innerWidth;
+	var winH = document.documentElement.clientHeight || document.body.clientHeight || window.innerHeight;
+	var container = document.getElementById("container");
+	container.style.width = winW + "px";
+	container.style.height = winH + "px";
+	var imgSrc = [
+		"img/bg1.jpg","img/bg2.jpg","img/bg3.jpg","img/bg4_b.png","img/bg5.jpg","img/button.png","img/car.png","img/car1.png","img/car2.png","img/fa.png","img/logo_l.png",
+		"img/logo_r.png","img/title1_b.png","img/title1.png","img/title2.png","img/title3.png","img/title4.png","img/title4_b.png","img/title5.png"
+	];
+	//预加载
+	function prevImg(imgs,callback){
+		var count = 0;
+		for(var i = 0;i < imgs.length;i++){
+			var img = new Image();
+			img.src = imgs[i];
+			img.onload = function(){
+				count ++ ;
+				if(count == imgs.length){
+					callback && callback();
+				};
+			};
+		}
+	};
+	prevImg(imgSrc,function(){
+		var loadImg = document.getElementById("loadImg");
+		loadImg.style.display = "none";
+		container.style.display = "block";
+		for(var j =0;j<pervShow.length;j++){
+			pervShow[j].style.display = "block";
+		}
+		var mySwiper = new Swiper ('.swiper-container', {
+			direction:"vertical",
+		    onInit : function(swiper){
+		    		swiperAnimateCache(swiper);
+		    		swiperAnimate(swiper);
+		    },
+		    onSlideChangeEnd : function(swiper){
+		    	swiperAnimate(swiper);
+		    },
+	 	});
+	});
+	
+};
+</script>
+</body>
+</html>

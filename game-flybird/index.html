@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>像素鸟</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<style type="text/css">
+*{
+	margin: 0;padding: 0;
+	/*让用户无法获取屏幕内容*/
+	-webkit-user-select: none;
+}
+.warp{
+	height: 480px;width: 320px;
+	background: url(img/bg.jpg) no-repeat;
+	position: relative;
+	margin: 0 auto;
+	overflow: hidden;
+}
+.warp > div{
+	position: absolute;
+}
+.head{
+	width: 190px;
+	top: 100px;
+	left: 0;right: 0;
+	margin: auto;
+}
+.score{
+	width: 28px;height: 39px;
+	top: 35px;
+	left: 0;right: 0;margin: auto;
+	z-index: 99;
+	display: none;
+}
+.btn{
+	width: 190px;top: 200px;left: 0;right: 0;margin: auto;
+}
+.btn img{cursor: pointer;}
+.pipe{
+	height: 422px;width: 62px;
+	overflow: hidden;
+	left: 320px;
+}
+.pipe div{
+	position: relative;
+}
+.pipe .up-pipe{
+	height: 80px;width: 62px;
+	background: url(img/up_mod.png);
+	margin-bottom: 120px;
+}
+.pipe .up-pipe img{bottom: 0;position: absolute;}
+.pipe .down-pipe{
+	height: 100%;
+	width: 62px;
+	background: url(img/down_mod.png);
+}
+.pipe2{
+	left: 511px;
+}
+.pipe2 .up-pipe{
+	height: 100px;
+}
+.bird{
+	width: 48px;height: 48px;
+	left: 45px;top: 170px;
+	display: none;
+}
+@keyframes birdRotate{
+	0{transform: rotate(-30deg);}
+	50%{transform: rotate(0deg);}
+	100%{transform: rotate(30deg);}
+}
+.game-over{
+	width: 269px;height:220px;
+	text-align: center;
+	left: 0;right: 0;margin: 75px auto 0;
+	display: none;z-index: 98;
+}
+.game-over img{
+	border: 0;margin: 0;padding: 0;
+}
+.game-over img#ok{
+	cursor: pointer;
+}
+.game-over .showScore{
+	position: relative;
+	width: 269px;height: 135px;
+	background: url(img/message.jpg) no-repeat;
+	margin-bottom: 9px;
+}
+.game-over .showScore span{
+	position: absolute;
+	height: 26px;width: 60px;
+	background-color: yellow;
+	right: 20px;
+	line-height: 26px;
+	font-weight: bold;
+}
+#newScore{
+	top: 38px;
+}
+#bestScore{
+	top: 88px;
+}
+.footer{
+	width: 320px;
+	height: 14px;
+	background: url(img/floor.jpg) -5px 0 no-repeat;
+	bottom: 43px;
+	animation: ani-footer 0.5s linear infinite;
+}
+@keyframes ani-footer{
+	from{background-position-x: -5px;}
+	to{background-position-x: -20px;}
+}
+</style>
+</head>
+<body>
+<div class="warp">
+	<div class="head" id="head">
+		<img src="img/head.jpg"/>
+	</div>
+	<div class="score" id="score">
+		<img src="img/0.jpg" alt=""/>
+	</div>
+	<div class="game-over" id="gameOver">
+		<img src="img/game_over.jpg"/>
+		<div class="showScore">
+			<span id="newScore">0</span>
+			<span id="bestScore">0</span>
+		</div>
+		<img src="img/ok.jpg" id="ok"/>
+	</div>
+	<div class="btn">
+		<img src="img/start.jpg" alt="" id="startBtn"/>
+		<img src="img/score.jpg" alt=""  id="scoreBtn"/>
+	</div>
+	<div class="bird" id="bird">
+		<img src="img/b1.gif"/>
+	</div>
+	<div class="pipe">
+		<div class="up-pipe"><img src="img/up_pipe.png"/></div>
+		<div class="down-pipe"><img src="img/down_pipe.png"/></div>
+	</div>
+	<div class="pipe pipe2">
+		<div class="up-pipe"><img src="img/up_pipe.png"/></div>
+		<div class="down-pipe"><img src="img/down_pipe.png"/></div>
+	</div>	
+	<div class="footer"></div>
+</div>	
+<audio src="music/bullet.mp3"></audio>
+<audio src="music/game_over.mp3"></audio>
+<audio src="music/game_music.mp3" loop></audio>
+<script src="touch.js" type="text/javascript" charset="utf-8"></script>
+<script src="tween.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	var bird = document.getElementById('bird');
+	var startBtn = document.getElementById("startBtn");
+	var scoreBtn = document.getElementById("scoreBtn");
+	var score = document.getElementById("score");
+	var head = document.getElementById("head");
+	var pipes = document.getElementsByClassName("pipe");
+	var plength = pipes.length;//管道长度。
+	var start = false;//游戏启动开关
+	var pipeTimer,//管道定时器
+		pipeSpeed = 5,//管道移动速度
+		winW = 320,//屏幕宽度
+		birdTimer;//小鸟飞行计时器
+		downSpeed = 0.4,//小鸟下落速度
+		upSpeed = 40,//小鸟上升速度
+		scoreNum = 0;//记录分数
+	var	scoreArr = [
+		"img/0.jpg","img/1.jpg","img/2.jpg","img/3.jpg","img/4.jpg","img/5.jpg","img/6.jpg","img/7.jpg","img/8.jpg","img/9.jpg"
+	];//保存分数图片路径
+	var gameMusic = document.getElementsByTagName("audio");
+	var reloadSwitch = false;//从新开始游戏的开关
+	
+	startBtn.addEventListener("touchstart",function(event){
+	//点击开始按钮执行
+		bird.style.display = "block";
+		startBtn.parentNode.style.display = "none";
+		head.style.display = "none";
+		score.style.display = "block";
+		pipeMove();//管道移动
+		birdFly();//小鸟开始下落
+		start = true;//打开游戏开关
+		pipes[0].Switch = true;//管道开关
+		pipes[1].Switch = true;
+		gameMusic[2].play();
+	},false);
+	//分数查看
+//	scoreBtn.onclick = function(){
+//		recordfn();
+//		gameOver1.style.display = "block";
+//		reloadSwitch = true;
+//	};
+	scoreBtn.addEventListener("touchstart",function(event){
+		recordfn();
+		gameOver1.style.display = "block";
+		reloadSwitch = true;
+	},false);
+	//管道移动
+	function pipeMove(){
+		pipeTimer = setInterval(function(){
+			for(var i =0;i<plength;i++){
+				pipes[i].style.left = pipes[i].offsetLeft - pipeSpeed + "px";
+				if(pipes[i].offsetLeft < (-pipes[i].offsetWidth)){
+					pipes[i].style.left = winW +"px";//复位
+					setPipeHeight(pipes[i]);//重新设定高度
+				};
+			};
+			endFn();//判断是否结束
+		},60);
+	};
+	//设置管道的高度，这里由于下面的管道用CSS设置的100%高度,只需要设置上管道的高度，用到了120px的固定外边距撑开下管道，以后可能会有问题产生。
+	function setPipeHeight(obj){
+		obj.children[0].style.height = randFn(80,120) + "px";
+		obj.Switch = true;//管道回到起点时，打开计分开关
+	};
+	
+	//随即函数,能取到边界值
+	function randFn(min,max){
+		return Math.floor(Math.random()*(max-min+1)+min);
+	};
+	
+	//碰撞检测
+	function endFn(){
+		var pipeW = pipes[0].offsetWidth; //获取管道的宽度，每个管道的宽度一样	
+		var l1 = bird.offsetLeft + 6 ,//由于图片不是很精细，做一些操作补全
+			t1 = bird.offsetTop + 13 ,
+			r1 = l1 + bird.offsetWidth - 6 - 8 ,
+			b1 = t1 + bird.offsetHeight -13 -12 ;
+		for(var i =0;i<plength;i++){
+			for(var j =0;j<plength;j++){
+				var l2 = pipes[i].offsetLeft,
+					t2 = pipes[i].children[j].offsetTop,
+					r2 = l2 + pipeW,
+					b2 = t2 + pipes[i].children[j].offsetHeight;
+				//判断是否碰撞管道
+				if(l1<r2 && r1>l2 && t1<b2 && b1>t2){
+					gameOver();
+				};
+			};
+			//判断是否加分，当小鸟的offsetLeft的值大于管道的offsetLeft+offsetWidth时应当加分。
+			var pipePosition = r2;//管道的位置
+			var birdPosition = l1;//小鸟的位置、
+			if(birdPosition > pipePosition && pipes[i].Switch){
+				scoreNum++;
+				pipes[i].Switch = false;
+				scoreFn();
+			}
+		};
+		//碰上下壁检测
+		if(t1<0 || b1>pipes[0].offsetHeight ){
+			gameOver();
+		}
+	};
+	//小鸟飞行/下落
+	function birdFly(){
+		birdTimer = setInterval(function(){
+			//重力加速的效果
+			downSpeed++;
+			bird.style.top = bird.offsetTop + downSpeed + "px";
+			bird.style.transform = "";
+			bird.style.animation ="birdRotate 0.6s forwards";
+		},60);
+	};
+	//点击屏幕。小鸟上升飞行
+//	document.documentElement.onclick = function(){
+//		if(start){
+//			downSpeed = 0.1;
+//			bird.style.transform = "rotate(-30deg)";
+//			bird.style.animation = "";
+//			bird.style.top = bird.offsetTop - upSpeed + "px";
+//			gameMusic[0].play();
+//		}
+//	};
+	document.addEventListener("touchstart",function(){
+		if(start){
+			downSpeed = 0.1;
+			bird.style.transform = "rotate(-30deg)";
+			bird.style.animation = "";
+			bird.style.top = bird.offsetTop - upSpeed + "px";
+			gameMusic[0].play();
+		}
+	},false);
+	//计分函数
+	function scoreFn(){
+		score.innerHTML = "";
+		var scoreStr = scoreNum.toString();//将分数转换成字符串
+		for(var i =0;i<scoreStr.length;i++){
+			var img = new Image();
+			img.src = scoreArr[scoreStr[i]];
+			score.appendChild(img);
+		};
+		score.style.width = scoreStr.length * 28+"px";
+	};
+	
+	//游戏结束
+	var gameOver1 = document.getElementById("gameOver");
+	var reload = document.getElementById("ok");
+	function gameOver(){
+		clearInterval(pipeTimer);
+		clearInterval(birdTimer);
+		start = false;//关闭游戏启动开关
+		gameOver1.style.display = "block";//显示积分板
+		gameMusic[2].pause();//背景音乐停
+		gameMusic[1].play();//游戏结束音乐播放
+		recordfn();//记录分数
+		//游戏结束动画，引用Tween
+		moveFn(bird,"top",bird.offsetTop,pipes[0].offsetHeight-bird.offsetHeight+10,30,function(){
+			reloadSwitch = true;//当游戏结束的动画播放完毕，才能点击重新开始
+		});
+	};
+	//重新开始游戏
+//	reload.onclick = function (){
+//		if(reloadSwitch){
+//			bird.style.display = "block";//小鸟显示
+//			bird.style.top = 170+"px";//小鸟位置
+//			startBtn.parentNode.style.display = "none";//隐藏按钮
+//			head.style.display = "none";
+//			score.style.display = "block";
+//			//管道位置
+//			pipes[0].style.left =320+"px"; 
+//			pipes[1].style.left = 511 + "px";
+//			gameOver1.style.display = "none";//记录板隐藏
+//			scoreNum = 0;//分数置0
+//			scoreFn();//分数显示
+//			start = true;//打开游戏开关
+//			pipes[0].Switch = true;//管道开关
+//			pipes[1].Switch = true;
+//			//开启计时器
+//			pipeMove();birdFly();
+//			gameMusic[2].play();//背景开启
+//			reloadSwitch = false;//重新开始游戏开关
+//		}	
+//	};
+	reload.addEventListener("touchstart",function(event){
+		if(reloadSwitch){
+			bird.style.display = "block";//小鸟显示
+			bird.style.top = 170+"px";//小鸟位置
+			startBtn.parentNode.style.display = "none";//隐藏按钮
+			head.style.display = "none";
+			score.style.display = "block";
+			//管道位置
+			pipes[0].style.left =320+"px"; 
+			pipes[1].style.left = 511 + "px";
+			gameOver1.style.display = "none";//记录板隐藏
+			scoreNum = 0;//分数置0
+			scoreFn();//分数显示
+			start = true;//打开游戏开关
+			pipes[0].Switch = true;//管道开关
+			pipes[1].Switch = true;
+			//开启计时器
+			pipeMove();birdFly();
+			gameMusic[2].play();//背景开启
+			reloadSwitch = false;//重新开始游戏开关
+		}
+	},false);
+	//最高分记录
+	function recordfn(){
+		var newScore = document.getElementById("newScore");
+		var bestScore = document.getElementById("bestScore");
+		var best = localStorage.getItem("bestScore");
+		if(best != null ){
+			bestScore.innerText = best;
+			if(scoreNum > best){//如当前分数大于本地存储中的最高分，则将其替换
+				localStorage.setItem("bestScore",scoreNum);
+			}
+		}else{//如果本地内存没有最高分（也就是第一次访问本游戏），设置最高分为当前游戏分数
+			localStorage.setItem("bestScore",scoreNum);
+		}
+		newScore.innerText = scoreNum;//分数显示在积分板上
+	};
+
+
+function moveFn(obj,type,start,end,endT,callback){
+	var t = 0;
+	var change = end-start;
+	var Timer = setInterval(function(){
+		t++;
+		if(t==endT){
+			//清楚定时器，结束动画
+			clearInterval(Timer);
+			//回调函数
+			callback && callback();
+		}
+		obj.style[type] = Tween["Bounce"]["easeOut"](t,start,change,endT)+ "px";
+	},60)
+	
+}
+</script>
+</body>
+</html>
